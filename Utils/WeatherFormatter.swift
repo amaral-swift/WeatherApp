@@ -73,3 +73,7 @@ func formatHourlyTime(_ dateString: String, timezone: String) -> String {
 
     return date.formatted(Date.FormatStyle(date: .omitted, time: .shortened, timeZone: parser.timeZone))
 }
+
+func hourlyDate(_ dateString: String, timezone: String) -> Date? {
+    hourlyTimeParser(for: timezone).date(from: dateString)
+}
