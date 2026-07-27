@@ -13,23 +13,13 @@ struct SearchCityView: View {
     @State private var searchText = ""
     @State private var selectedCity: CityResult?
     @State private var displayedTemperature: Double = WeatherTheme.defaultTemperature
+    @Environment(\.dismissSearch) private var dismissSearch
 
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(
-                    colors: WeatherTheme.gradientColors(temperature: displayedTemperature),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
-                .animation(WeatherTheme.backgroundTransition, value: displayedTemperature)
-
-                if let selectedCity {
-                    selectedCityContent(selectedCity)
-                } else {
-                    searchContent
-                }
+                backgroundGradient
+                searchContent
             }
             .navigationTitle("Buscar Clima")
             .navigationBarTitleDisplayMode(.inline)
@@ -52,24 +42,33 @@ struct SearchCityView: View {
 
                 await searchViewModel.search(searchText)
             }
+            .navigationDestination(item: $selectedCity) { city in
+                ZStack {
+                    backgroundGradient
+                    selectedCityContent(city)
+                }
+                .navigationTitle(city.name)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarColorScheme(.dark, for: .navigationBar)
+            }
         }
+    }
+
+    private var backgroundGradient: some View {
+        LinearGradient(
+            colors: WeatherTheme.gradientColors(temperature: displayedTemperature),
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+        .animation(WeatherTheme.backgroundTransition, value: displayedTemperature)
     }
 
     private func selectedCityContent(_ city: CityResult) -> some View {
         CityWeatherDetailView(city: city, onTemperatureChange: { temperature in
             displayedTemperature = temperature ?? WeatherTheme.defaultTemperature
         }) {
-            VStack(spacing: 12) {
-                CityFavoriteControls(city: city)
-
-                Button("Nova Busca", systemImage: "magnifyingglass", action: resetSearch)
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 12)
-                    .background(WeatherTheme.cardBackground)
-                    .clipShape(.rect(cornerRadius: WeatherTheme.cardCornerRadius))
-            }
+            CityFavoriteControls(city: city)
         }
     }
 
@@ -105,12 +104,10 @@ struct SearchCityView: View {
     }
 
     private func selectCity(_ city: CityResult) {
+        // Resign the search field's focus so the keyboard doesn't stay open
+        // underneath the pushed city detail screen.
+        dismissSearch()
         selectedCity = city
-    }
-
-    private func resetSearch() {
-        selectedCity = nil
-        displayedTemperature = WeatherTheme.defaultTemperature
     }
 }
 

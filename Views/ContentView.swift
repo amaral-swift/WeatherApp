@@ -104,7 +104,8 @@ struct ContentView: View {
         .refreshable {
             await weatherViewModel.fetchWeather(
                 latitude: locationViewModel.latitude,
-                longitude: locationViewModel.longitude
+                longitude: locationViewModel.longitude,
+                forceRefresh: true
             )
             await locationViewModel.fetchCity(
                 latitude: locationViewModel.latitude,
