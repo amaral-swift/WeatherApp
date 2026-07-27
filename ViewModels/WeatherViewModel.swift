@@ -23,20 +23,24 @@ class WeatherViewModel: ObservableObject {
         self.service = service
     }
     
-    func fetchWeather(latitude: Double, longitude: Double) async {
-        isLoading = true
+    func fetchWeather(latitude: Double, longitude: Double, forceRefresh: Bool = false) async {
+        let isBackgroundRefresh = forceRefresh && weather != nil
+        isLoading = !isBackgroundRefresh
         errorMessage = nil
-        weather = nil
-        hourlyForecast = []
+        if !isBackgroundRefresh {
+            weather = nil
+            hourlyForecast = []
+        }
 
         do {
-            let weather = try await service.fetchWeather(latitude: latitude, longitude: longitude)
+            let weather = try await service.fetchWeather(latitude: latitude, longitude: longitude, forceRefresh: forceRefresh)
             self.weather = weather
             hourlyForecast = nextHours(from: weather.hourly, timezone: weather.timezone)
-
             isLoading = false
         } catch {
-            errorMessage = error.localizedDescription
+            if !isBackgroundRefresh {
+                errorMessage = error.localizedDescription
+            }
             isLoading = false
         }
     }

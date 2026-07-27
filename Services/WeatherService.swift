@@ -16,8 +16,14 @@ protocol URLSessionProtocol {
 extension URLSession: URLSessionProtocol {}
 
 protocol WeatherServiceProtocol {
-    func fetchWeather(latitude: Double, longitude: Double) async throws -> WeatherResponse
+    func fetchWeather(latitude: Double, longitude: Double, forceRefresh: Bool) async throws -> WeatherResponse
     func searchCitiesWithName(_ query: String) async throws -> [CityResult]
+}
+
+extension WeatherServiceProtocol {
+    func fetchWeather(latitude: Double, longitude: Double) async throws -> WeatherResponse {
+        try await fetchWeather(latitude: latitude, longitude: longitude, forceRefresh: false)
+    }
 }
 
 actor WeatherService: WeatherServiceProtocol {
@@ -32,20 +38,20 @@ actor WeatherService: WeatherServiceProtocol {
         self.session = session
     }
     
-    func fetchWeather(latitude: Double, longitude: Double) async throws -> WeatherResponse {
-        
+    func fetchWeather(latitude: Double, longitude: Double, forceRefresh: Bool = false) async throws -> WeatherResponse {
+
         let urlString = "\(baseURL)/forecast?" +
         "latitude=\(latitude)" +
         "&longitude=\(longitude)" +
         "&current=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m" +
         "&timezone=auto" +
         "&hourly=temperature_2m,weather_code,wind_speed_10m"
-        
+
         guard let url = URL(string: urlString) else {
             throw WeatherError.invalidURL
         }
-        
-        if let cached = await weatherCache[url] {
+
+        if !forceRefresh, let cached = await weatherCache[url] {
             switch cached {
             case .ready(let weather, let timestamp):
                 if Date().timeIntervalSince(timestamp) < cacheExpiration {
@@ -91,8 +97,11 @@ actor WeatherService: WeatherServiceProtocol {
     }
     
     func searchCitiesWithName(_ query: String) async throws -> [CityResult] {
-        let urlString = "https://geocoding-api.open-meteo.com/v1/search?name=\(query)"
-        
+        guard let encodedQuery = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            throw WeatherError.invalidURL
+        }
+        let urlString = "https://geocoding-api.open-meteo.com/v1/search?name=\(encodedQuery)"
+
         guard let url = URL(string: urlString) else {
             throw WeatherError.invalidURL
         }

@@ -16,38 +16,36 @@ struct FavoritesView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                LinearGradient(
-                    colors: WeatherTheme.gradientColors(temperature: displayedTemperature),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
-                .animation(WeatherTheme.backgroundTransition, value: displayedTemperature)
-
-                if let selectedCity {
-                    CityWeatherDetailView(city: selectedCity, onTemperatureChange: { temperature in
-                        displayedTemperature = temperature ?? WeatherTheme.defaultTemperature
-                    }) {
-                        CityFavoriteControls(city: selectedCity)
-                    }
-                } else {
-                    favoritesList
-                }
+                backgroundGradient
+                favoritesList
             }
-            .navigationTitle(selectedCity?.name ?? "Favoritos")
+            .navigationTitle("Favoritos")
             .navigationBarTitleDisplayMode(.inline)
             .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbar {
-                if selectedCity != nil {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Favoritos", systemImage: "chevron.left") {
-                            selectedCity = nil
-                            displayedTemperature = WeatherTheme.defaultTemperature
-                        }
+            .navigationDestination(item: $selectedCity) { city in
+                ZStack {
+                    backgroundGradient
+                    CityWeatherDetailView(city: city, onTemperatureChange: { temperature in
+                        displayedTemperature = temperature ?? WeatherTheme.defaultTemperature
+                    }) {
+                        CityFavoriteControls(city: city)
                     }
                 }
+                .navigationTitle(city.name)
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarColorScheme(.dark, for: .navigationBar)
             }
         }
+    }
+
+    private var backgroundGradient: some View {
+        LinearGradient(
+            colors: WeatherTheme.gradientColors(temperature: displayedTemperature),
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+        .animation(WeatherTheme.backgroundTransition, value: displayedTemperature)
     }
 
     @ViewBuilder

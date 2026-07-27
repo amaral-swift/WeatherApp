@@ -16,17 +16,18 @@ class MockWeatherService: WeatherServiceProtocol {
 
     func fetchWeather(
         latitude: Double,
-        longitude: Double
+        longitude: Double,
+        forceRefresh: Bool = false
     ) async throws -> WeatherResponse {
-        
+
         if let error = mockError {
             throw error
         }
-        
+
         guard let weather = mockWeather else {
             throw URLError(.unknown)
         }
-        
+
         return weather
     }
     
