@@ -15,8 +15,20 @@ struct CityWeatherDetailView<Trailing: View>: View {
     var onTemperatureChange: (Double?) -> Void = { _ in }
     @ViewBuilder var trailing: () -> Trailing
 
-    @StateObject private var weatherViewModel = WeatherViewModel()
+    @StateObject private var weatherViewModel: WeatherViewModel
     @State private var cameraPosition: MapCameraPosition = .automatic
+
+    init(
+        city: CityResult,
+        weatherService: WeatherServiceProtocol,
+        onTemperatureChange: @escaping (Double?) -> Void = { _ in },
+        @ViewBuilder trailing: @escaping () -> Trailing
+    ) {
+        self.city = city
+        self.onTemperatureChange = onTemperatureChange
+        self.trailing = trailing
+        _weatherViewModel = StateObject(wrappedValue: WeatherViewModel(service: weatherService))
+    }
 
     var body: some View {
         ScrollView {
@@ -84,9 +96,8 @@ struct CityWeatherDetailView<Trailing: View>: View {
 }
 
 extension CityWeatherDetailView where Trailing == EmptyView {
-    init(city: CityResult) {
-        self.city = city
-        self.trailing = { EmptyView() }
+    init(city: CityResult, weatherService: WeatherServiceProtocol) {
+        self.init(city: city, weatherService: weatherService, trailing: { EmptyView() })
     }
 }
 
@@ -94,6 +105,6 @@ extension CityWeatherDetailView where Trailing == EmptyView {
 //    ZStack {
 //        LinearGradient(colors: WeatherTheme.gradientColors, startPoint: .top, endPoint: .bottom)
 //            .ignoresSafeArea()
-//        CityWeatherDetailView(city: CityResult(name: "Campinas", latitude: -22.9, longitude: -47.0, country: "Brazil"))
+//        CityWeatherDetailView(city: CityResult(name: "Campinas", latitude: -22.9, longitude: -47.0, country: "Brazil"), weatherService: WeatherService())
 //    }
 //}

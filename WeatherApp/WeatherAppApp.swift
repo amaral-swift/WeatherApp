@@ -11,18 +11,21 @@ import SwiftData
 @main
 struct WeatherAppApp: App {
     @StateObject private var favoritesViewModel = FavoritesViewModel()
+    // Shared across every screen so its NSCache is actually reused instead of
+    // each screen fetching the same city from scratch.
+    private let weatherService: WeatherServiceProtocol = WeatherService()
 
     var body: some Scene {
         WindowGroup {
             TabView {
                 Tab("Clima", systemImage: "cloud.sun.fill") {
-                    ContentView()
+                    ContentView(weatherService: weatherService)
                 }
                 Tab("Buscar", systemImage: "magnifyingglass") {
-                    SearchCityView()
+                    SearchCityView(weatherService: weatherService)
                 }
                 Tab("Favoritos", systemImage: "star.fill") {
-                    FavoritesView()
+                    FavoritesView(weatherService: weatherService)
                 }
             }
             .environmentObject(favoritesViewModel)
@@ -30,15 +33,15 @@ struct WeatherAppApp: App {
             .alert(
                 "Não foi possível concluir",
                 isPresented: Binding(
-                    get: { favoritesViewModel.notificationError != nil },
+                    get: { favoritesViewModel.saveError != nil },
                     set: { isPresented in
-                        if !isPresented { favoritesViewModel.notificationError = nil }
+                        if !isPresented { favoritesViewModel.saveError = nil }
                     }
                 )
             ) {
                 Button("OK") {}
             } message: {
-                Text(favoritesViewModel.notificationError ?? "")
+                Text(favoritesViewModel.saveError ?? "")
             }
         }
         .modelContainer(for: [FavoriteCity.self])

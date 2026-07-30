@@ -18,25 +18,11 @@ struct CityFavoriteControls: View {
         favoritesViewModel.favorite(name: city.name, country: city.country, in: favorites)
     }
 
-    private var isNotifying: Bool {
-        favorite?.notificate ?? false
-    }
-
     var body: some View {
-        HStack(spacing: 16) {
-            Button(action: toggleFavorite) {
-                Label(favorite != nil ? "Favoritado" : "Favoritar", systemImage: favorite != nil ? "star.fill" : "star")
-            }
-            .foregroundStyle(favorite != nil ? .yellow : .white)
-
-            Divider()
-                .frame(height: 20)
-
-            Button(action: toggleNotifications) {
-                Label(isNotifying ? "Notificações Ativadas" : "Notificações", systemImage: isNotifying ? "bell.fill" : "bell")
-            }
-            .foregroundStyle(isNotifying ? .yellow : .white)
+        Button(action: toggleFavorite) {
+            Label(favorite != nil ? "Favoritado" : "Favoritar", systemImage: favorite != nil ? "star.fill" : "star")
         }
+        .foregroundStyle(favorite != nil ? .yellow : .white)
         .font(.subheadline.bold())
         .padding()
         .frame(maxWidth: .infinity)
@@ -53,20 +39,6 @@ struct CityFavoriteControls: View {
             favorites: favorites,
             context: modelContext
         )
-    }
-
-    private func toggleNotifications() {
-        Task {
-            await favoritesViewModel.setNotifications(
-                enabled: !isNotifying,
-                name: city.name,
-                country: city.country,
-                latitude: city.latitude,
-                longitude: city.longitude,
-                favorites: favorites,
-                context: modelContext
-            )
-        }
     }
 }
 

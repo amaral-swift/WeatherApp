@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct FavoritesView: View {
+    let weatherService: WeatherServiceProtocol
     @Query(sort: \FavoriteCity.addedDate, order: .reverse) private var favorites: [FavoriteCity]
     @State private var selectedCity: CityResult?
     @State private var displayedTemperature: Double = WeatherTheme.defaultTemperature
@@ -25,7 +26,7 @@ struct FavoritesView: View {
             .navigationDestination(item: $selectedCity) { city in
                 ZStack {
                     backgroundGradient
-                    CityWeatherDetailView(city: city, onTemperatureChange: { temperature in
+                    CityWeatherDetailView(city: city, weatherService: weatherService, onTemperatureChange: { temperature in
                         displayedTemperature = temperature ?? WeatherTheme.defaultTemperature
                     }) {
                         CityFavoriteControls(city: city)
@@ -71,7 +72,7 @@ struct FavoritesView: View {
 }
 
 #Preview {
-    FavoritesView()
+    FavoritesView(weatherService: WeatherService())
         .environmentObject(FavoritesViewModel())
         .modelContainer(for: [FavoriteCity.self], inMemory: true)
 }

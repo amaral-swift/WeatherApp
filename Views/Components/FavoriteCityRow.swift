@@ -40,13 +40,6 @@ struct FavoriteCityRow: View {
             }
             .buttonStyle(.plain)
 
-            Button(action: toggleNotifications) {
-                Image(systemName: favorite.notificate ? "bell.fill" : "bell")
-                    .foregroundStyle(favorite.notificate ? .yellow : .white.opacity(0.5))
-            }
-            .buttonStyle(.plain)
-            .frame(minWidth: 44, minHeight: 44)
-
             Button(action: removeFavorite) {
                 Image(systemName: "star.fill")
                     .foregroundStyle(.yellow)
@@ -58,20 +51,6 @@ struct FavoriteCityRow: View {
         .frame(maxWidth: .infinity)
         .background(WeatherTheme.cardBackground)
         .clipShape(.rect(cornerRadius: WeatherTheme.cardCornerRadius))
-    }
-
-    private func toggleNotifications() {
-        Task {
-            await favoritesViewModel.setNotifications(
-                enabled: !favorite.notificate,
-                name: favorite.cityName,
-                country: favorite.cityCountry,
-                latitude: favorite.latitude,
-                longitude: favorite.longitude,
-                favorites: favorites,
-                context: modelContext
-            )
-        }
     }
 
     private func removeFavorite() {
@@ -90,7 +69,7 @@ struct FavoriteCityRow: View {
 //    ZStack {
 //        LinearGradient(colors: WeatherTheme.gradientColors, startPoint: .top, endPoint: .bottom)
 //            .ignoresSafeArea()
-//        FavoriteCityRow(favorite: FavoriteCity(cityName: "Campinas", cityCountry: "Brazil", latitude: -22.9, longitude: -47.0, notificate: true))
+//        FavoriteCityRow(favorite: FavoriteCity(cityName: "Campinas", cityCountry: "Brazil", latitude: -22.9, longitude: -47.0))
 //            .padding()
 //    }
 //    .environmentObject(FavoritesViewModel())

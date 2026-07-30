@@ -12,7 +12,7 @@ import SwiftData
 @MainActor
 class FavoritesViewModel: ObservableObject {
 
-    @Published var notificationError: String?
+    @Published var saveError: String?
 
     func isFavorite(name: String, country: String, in favorites: [FavoriteCity]) -> Bool {
         favorite(name: name, country: country, in: favorites) != nil
@@ -32,9 +32,6 @@ class FavoritesViewModel: ObservableObject {
         context: ModelContext
     ) -> FavoriteCity? {
         if let existing = favorite(name: name, country: country, in: favorites) {
-            if existing.notificate {
-                WeatherNotificationScheduler.cancelNotification(for: existing)
-            }
             context.delete(existing)
             saveContext(context)
             return nil
@@ -43,8 +40,7 @@ class FavoritesViewModel: ObservableObject {
                 cityName: name,
                 cityCountry: country,
                 latitude: latitude,
-                longitude: longitude,
-                notificate: false
+                longitude: longitude
             )
             context.insert(newFavorite)
             saveContext(context)
@@ -56,46 +52,7 @@ class FavoritesViewModel: ObservableObject {
         do {
             try context.save()
         } catch {
-            notificationError = "Não foi possível salvar: \(error.localizedDescription)"
+            saveError = "Não foi possível salvar: \(error.localizedDescription)"
         }
-    }
-
-    func setNotifications(
-        enabled: Bool,
-        name: String,
-        country: String,
-        latitude: Double,
-        longitude: Double,
-        favorites: [FavoriteCity],
-        context: ModelContext
-    ) async {
-        notificationError = nil
-
-        let favorite = favorite(name: name, country: country, in: favorites) ?? {
-            let newFavorite = FavoriteCity(
-                cityName: name,
-                cityCountry: country,
-                latitude: latitude,
-                longitude: longitude,
-                notificate: false
-            )
-            context.insert(newFavorite)
-            return newFavorite
-        }()
-
-        if enabled {
-            do {
-                try await WeatherNotificationScheduler.scheduleDailyNotification(for: favorite)
-                favorite.notificate = true
-            } catch {
-                favorite.notificate = false
-                notificationError = error.localizedDescription
-            }
-        } else {
-            WeatherNotificationScheduler.cancelNotification(for: favorite)
-            favorite.notificate = false
-        }
-
-        saveContext(context)
     }
 }
