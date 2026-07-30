@@ -22,7 +22,6 @@
 		38C65B78300974CA002E4E6B /* SearchCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C65B77300974CA002E4E6B /* SearchCityView.swift */; };
 		38CDADE83017CFFB00FBADCD /* CacheEntryObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CDADE73017CFFB00FBADCD /* CacheEntryObject.swift */; };
 		38CDADEA3017D03700FBADCD /* NSCache+Subscript.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38CDADE93017D03700FBADCD /* NSCache+Subscript.swift */; };
-		4394B249B349F0DA1F796082 /* WeatherNotificationScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8BAAE77164960458BD9058 /* WeatherNotificationScheduler.swift */; };
 		56A6B13B1475A30BAAFB5BD0 /* WeatherIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 064C8DF8A6957E1A44BDECD9 /* WeatherIconView.swift */; };
 		59498FE9BB212821B4813D35 /* CitySearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E295BB31576A82EC208BC1 /* CitySearchViewModel.swift */; };
 		5C4A499F0BFD481FE5D97D0C /* FavoriteCityRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8036858D3291BC44CCD4645 /* FavoriteCityRow.swift */; };
@@ -64,7 +63,6 @@
 		38CDADE73017CFFB00FBADCD /* CacheEntryObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheEntryObject.swift; sourceTree = "<group>"; };
 		38CDADE93017D03700FBADCD /* NSCache+Subscript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSCache+Subscript.swift"; sourceTree = "<group>"; };
 		45C0EFEDEB41ED9A61FBD6E2 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
-		4A8BAAE77164960458BD9058 /* WeatherNotificationScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherNotificationScheduler.swift; sourceTree = "<group>"; };
 		539DB6104699C8F0A15496B7 /* CurrentWeatherCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeatherCard.swift; sourceTree = "<group>"; };
 		5AF82740F82B775428D05CB9 /* WeatherErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherErrorView.swift; sourceTree = "<group>"; };
 		8F20486F6BC05C53FA3392A3 /* CityWeatherDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityWeatherDetailView.swift; sourceTree = "<group>"; };
@@ -150,7 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				384A043E3006A18D000243ED /* WeatherService.swift */,
-				4A8BAAE77164960458BD9058 /* WeatherNotificationScheduler.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -338,7 +335,6 @@
 				A2339C27AECFF9F10491CB7B /* CurrentWeatherCard.swift in Sources */,
 				38B04AD5300A794E006B1AE2 /* FavoriteCity.swift in Sources */,
 				09A4904D935CFCBAA1013611 /* WeatherErrorView.swift in Sources */,
-				4394B249B349F0DA1F796082 /* WeatherNotificationScheduler.swift in Sources */,
 				5E91D1EA84CDA387F62D86B6 /* FavoritesViewModel.swift in Sources */,
 				07AB14D8C34A065B78F83E67 /* CityWeatherDetailView.swift in Sources */,
 				38CDADE83017CFFB00FBADCD /* CacheEntryObject.swift in Sources */,
@@ -493,11 +489,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7N9YG996K2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Forecast;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Permissão para utilizar sua localização.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Permissão para utilizar sua localização.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -505,6 +504,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -512,6 +512,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = gabrielAmaral.WeatherApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -527,11 +528,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7N9YG996K2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Forecast;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Permissão para utilizar sua localização.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Permissão para utilizar sua localização.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -539,6 +543,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -546,6 +551,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = gabrielAmaral.WeatherApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;

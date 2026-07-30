@@ -16,16 +16,14 @@ final class FavoriteCity {
     var latitude: Double
     var longitude: Double
     var addedDate: Date
-    var notificate: Bool
-    
-    init(cityName: String, cityCountry: String, latitude: Double, longitude: Double, notificate: Bool) {
+
+    init(cityName: String, cityCountry: String, latitude: Double, longitude: Double) {
         self.id = "\(cityName), \(cityCountry)"
         self.cityName = cityName
         self.cityCountry = cityCountry
         self.latitude = latitude
         self.longitude = longitude
         self.addedDate = Date()
-        self.notificate = notificate
     }
 
     var asCityResult: CityResult {

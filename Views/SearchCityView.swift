@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SearchCityView: View {
+    let weatherService: WeatherServiceProtocol
     @StateObject private var searchViewModel = CitySearchViewModel()
     @State private var searchText = ""
     @State private var selectedCity: CityResult?
@@ -65,7 +66,7 @@ struct SearchCityView: View {
     }
 
     private func selectedCityContent(_ city: CityResult) -> some View {
-        CityWeatherDetailView(city: city, onTemperatureChange: { temperature in
+        CityWeatherDetailView(city: city, weatherService: weatherService, onTemperatureChange: { temperature in
             displayedTemperature = temperature ?? WeatherTheme.defaultTemperature
         }) {
             CityFavoriteControls(city: city)
@@ -112,7 +113,7 @@ struct SearchCityView: View {
 }
 
 #Preview {
-    SearchCityView()
+    SearchCityView(weatherService: WeatherService())
         .environmentObject(FavoritesViewModel())
         .modelContainer(for: [FavoriteCity.self], inMemory: true)
 }

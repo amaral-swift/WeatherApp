@@ -10,10 +10,14 @@ import MapKit
 import SwiftData
 
 struct ContentView: View {
-    @StateObject var weatherViewModel = WeatherViewModel()
+    @StateObject var weatherViewModel: WeatherViewModel
     @StateObject var locationViewModel = LocationViewModel()
     @State private var cameraPosition: MapCameraPosition = .automatic
     @State private var loadingStarted = false
+
+    init(weatherService: WeatherServiceProtocol) {
+        _weatherViewModel = StateObject(wrappedValue: WeatherViewModel(service: weatherService))
+    }
 
     private var errorMessage: String? {
         weatherViewModel.errorMessage ?? locationViewModel.errorMessage
@@ -159,5 +163,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(weatherService: WeatherService())
 }

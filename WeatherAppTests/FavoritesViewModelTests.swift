@@ -54,7 +54,7 @@ final class FavoritesViewModelTests: XCTestCase {
     // Testa: "Favoritar uma cidade já favorita remove ela (toggle)?"
     func testToggleFavoriteRemovesExistingCity() {
         // ARRANGE
-        let existing = FavoriteCity(cityName: "Campinas", cityCountry: "Brazil", latitude: -22.9, longitude: -47.0, notificate: false)
+        let existing = FavoriteCity(cityName: "Campinas", cityCountry: "Brazil", latitude: -22.9, longitude: -47.0)
         context.insert(existing)
 
         // ACT
@@ -75,7 +75,7 @@ final class FavoritesViewModelTests: XCTestCase {
     // Testa: "Cidades com o mesmo nome em países diferentes não colidem?"
     func testIsFavoriteDistinguishesSameNameDifferentCountry() {
         // ARRANGE
-        let londonUK = FavoriteCity(cityName: "London", cityCountry: "United Kingdom", latitude: 51.5, longitude: -0.12, notificate: false)
+        let londonUK = FavoriteCity(cityName: "London", cityCountry: "United Kingdom", latitude: 51.5, longitude: -0.12)
 
         // ASSERT
         XCTAssertTrue(sut.isFavorite(name: "London", country: "United Kingdom", in: [londonUK]))
